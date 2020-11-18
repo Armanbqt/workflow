@@ -230,8 +230,8 @@ namespace Amazon.QLDB.Driver
         {
             var fetchPageRequest = new FetchPageRequest
             {
-                TransactionId = txnId,
                 NextPageToken = nextPageToken,
+                TransactionId = txnId,
             };
             var request = new SendCommandRequest
             {
