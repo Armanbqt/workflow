@@ -94,6 +94,7 @@ namespace Amazon.QLDB.Driver
         /// <param name="func">The Executor lambda representing the block of code to be executed within the transaction. This cannot have any
         /// side effects as it may be invoked multiple times, and the result cannot be trusted until the
         /// transaction is committed.</param>
+        /// <typeparam name="T">The return type.</typeparam>
         ///
         /// <returns>The return value of executing the executor. Note that if you directly return a <see cref="IResult"/>, this will
         /// be automatically buffered in memory before the implicit commit to allow reading, as the commit will close
