@@ -116,16 +116,16 @@ namespace Amazon.QLDB.Driver
                 transaction = this.StartTransaction();
                 T returnedValue = func(new TransactionExecutor(transaction));
                 if (returnedValue is IResult)
-                {returnedValue = (T)(object)BufferedResult.BufferResult((IResult)returnedValue);}
+                {
+                    returnedValue = (T)(object)BufferedResult.BufferResult((IResult)returnedValue);
+                }
 
                 transaction.Commit();
                 return returnedValue;
             }
             catch (InvalidSessionException ise)
-            {
-                this.isAlive = false;
-                throw new RetriableException(transaction.Id, false, ise);
-            }
+            {this.isAlive = false;
+                throw new RetriableException(transaction.Id, false, ise);}
             catch (OccConflictException occ)
             {
                 throw new RetriableException(transaction.Id, occ);
