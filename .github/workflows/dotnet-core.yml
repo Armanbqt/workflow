@@ -13,14 +13,14 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]       
-        dotnet: ['3.x']
+        dotnet: ['2.x, 3.x']
 
     steps:
-    - name: Super-Linter
-      uses: github/super-linter@v3.13.5
-      env:
-         DEFAULT_BRANCH: master
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#    - name: Super-Linter
+ #     uses: github/super-linter@v3.13.5
+  #    env:
+   #      DEFAULT_BRANCH: master
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
