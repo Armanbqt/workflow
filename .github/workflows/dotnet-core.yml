@@ -38,5 +38,7 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --configuration Release --no-restore
-    - name: Test
+    - name: Run Unit Test
+      run: dotnet test Amazon.QLDB.Driver.Tests
+    - name: Integration Test
       run: dotnet test --no-restore --verbosity normal --settings Amazon.QLDB.Driver.IntegrationTests/.runsettings
