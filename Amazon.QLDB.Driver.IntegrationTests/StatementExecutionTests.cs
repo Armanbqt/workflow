@@ -576,6 +576,7 @@ namespace Amazon.QLDB.Driver.IntegrationTests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(OccConflictException))]
         public void Execute_UpdateSameRecordAtSameTime_ThrowsOccException()
         {
             QldbDriver driver = integrationTestBase.CreateDriver(amazonQldbSessionConfig, default, default, 0);
@@ -604,22 +605,22 @@ namespace Amazon.QLDB.Driver.IntegrationTests
 
             try
             {
-                // Run three threads updating the same document in parallel to trigger OCC exception.
-                Parallel.For(0, 3, (i) => driver.Execute(txn =>
+                driver.Execute(txn =>
+                {
+                    // Query table.
+                    var result = txn.Execute(selectQuery);
+                    var currentValue = 0;
+                    foreach (var row in result)
                     {
-                        // Query table.
-                        var result = txn.Execute(selectQuery);
-
-                        var currentValue = 0;
-                        foreach (var row in result)
-                        {
-                            currentValue = row.IntValue;
-                        }
-
+                        currentValue = row.IntValue;
+                    }
+                    driver.Execute(txn =>
+                    {
                         // Update document.
                         var ionValue = ValueFactory.NewInt(currentValue + 5);
                         txn.Execute(updateQuery, ionValue);
-                    }, RetryPolicy.Builder().WithMaxRetries(0).Build()));
+                    });
+                }, RetryPolicy.Builder().WithMaxRetries(0).Build());
             }
             catch (AggregateException e)
             {
